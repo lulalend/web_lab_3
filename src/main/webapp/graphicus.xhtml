@@ -1,4 +1,5 @@
-<svg id='svg' width='300' height='300'>
+<svg onclick="handleClick()" id='svg' width='300' height='300'
+     xmlns:c="http://java.sun.com/jsp/jstl/core">
     <!-- figures -->
     <polygon points='150,150 250,150 250,200 150,200' stroke='#16161d'
              stroke-width='2' fill='#F9F7FA90'></polygon>
@@ -29,17 +30,19 @@
     <line x1='145' x2='155' y1='200' y2='200' stroke='#16161d' stroke-width='2'></line>
     <line x1='145' x2='155' y1='250' y2='250' stroke='#16161d' stroke-width='2'></line>
 
-    <text x='40' y='175'>-R</text>
-    <text x='85' y='175'>-R/2</text>
-    <text x='190' y='175'>R/2</text>
-    <text x='240' y='175'>R</text>
+    <text x='40' y='175'>#{-tableRow.r}</text>
+    <text x='85' y='175'>#{-tableRow.r.doubleValue()/2}</text>
+    <text x='190' y='175'>#{tableRow.r.doubleValue()/2}</text>
+    <text x='240' y='175'>#{tableRow.r}</text>
 
-    <text x='160' y='55'>R</text>
-    <text x='160' y='105'>R/2</text>
-    <text x='160' y='213'>-R/2</text>
-    <text x='160' y='255'>-R</text>
+    <text x='160' y='55'>#{tableRow.r}</text>
+    <text x='160' y='105'>#{tableRow.r.doubleValue()/2}</text>
+    <text x='160' y='213'>#{-tableRow.r.doubleValue()/2}</text>
+    <text x='160' y='255'>#{-tableRow.r}</text>
 
-    <circle cx="#{150 + 200 * (tableRow.x / tableRow.r)}"
-            cy="#{150 - 100 * (tableRow.y / tableRow.r)}"
-            r="4" class='#{tableRow.hitResult ? "#2E8B57" : "#640007ea" }'/>
+    <c:if test="#{tableRow.id != null}">
+        <circle cx="#{150 + 100 * (tableRow.x.divide(tableRow.r))}"
+                cy="#{150 - 100 * (tableRow.y.divide(tableRow.r))}"
+                r="5" fill="#{tableRow.hitResult ? '#2E8B57' : '#640007'}"/>
+    </c:if>
 </svg>

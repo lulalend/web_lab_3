@@ -5,113 +5,109 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <h:head>
-        <title>Лаба три-с</title>
-        <link rel="icon" href="./img/favicon.ico" />
+<h:head>
+    <title>Лаба три-с</title>
+    <link rel="icon" href="./img/favicon.ico" />
 
-        <link rel='stylesheet' href='./styles/style.css' />
-<!--        <script type='text/javascript' src='./scripts/main.js' defer></script>-->
-<!--        <script src='./scripts/clear.js' defer></script>-->
-<!--        <script type='text/javascript' src='./scripts/update.js' defer></script>-->
-<!--        <script type='text/javascript' src='scripts/init.js' defer></script>-->
-<!--        <script type='text/javascript' src='scripts/draw_dots.js' defer></script>-->
-    </h:head>
-    <h:body onload="init()">
-        <div id="to-menu">
-            <h2>Вернуться в меню <h:link outcome="jumpToMenu">&#127968;</h:link></h2>
-        </div>
-        <div id="data">
-            <h4>
-                Здесь можно ввести свои значения
-                (каждый параметр необходимо задать)
-            </h4><br/>
-            <h:form id='feedback-form'>
-                <h:outputLabel for='R'>Выберите R</h:outputLabel>
-                <h:panelGrid id="spinner" columns="1" style="margin-bottom: 10px">
-                    <p:spinner id="R" min="1" max="4" stepFactor="0.25" value="#{tableRow.r}"
-                               required="true" requiredMessage="Выберете R, пожалуйста">
-                    </p:spinner>
-                    <p:slider for="R" minValue="1" maxValue="4" step="0.25"/>
-                </h:panelGrid>
-                <h:message for="R" id="R-error" class='error'/>
-                <br/>
+    <link rel='stylesheet' href='./styles/style.css' />
+    <script type='text/javascript' src='scripts/clock.js'></script>
+</h:head>
+<h:body>
+    <div id="to-menu">
+        <h2>Вернуться в меню <h:link outcome="jumpToMenu">&#127968;</h:link></h2>
+    </div>
+    <div id="data">
+        <h4>
+            Здесь можно ввести свои значения
+            (каждый параметр необходимо задать)
+        </h4><br/>
+        <h:form id='feedback-form'>
+            <h:outputLabel for='R'>Выберите R</h:outputLabel>
+            <h:panelGrid id="spinner" columns="1" style="margin-bottom: 10px">
+                <p:spinner id="R" min="1" max="4" stepFactor="0.25" value="#{tableRow.r}"
+                           required="true" requiredMessage="Выберете R, пожалуйста">
+                </p:spinner>
+                <p:slider for="R" minValue="1" maxValue="4" step="0.25"/>
+            </h:panelGrid>
+            <h:message for="R" id="R-error" class='error'/>
+            <br/>
 
-                <h:outputLabel for='X'>
-                    Введите X ( изменяется в интервале (-3 ; 3) ):
-                </h:outputLabel>
-                <br/>
-                <h:inputText id='X' name='X' type='text'  value="#{tableRow.x}" required="true"
-                             requiredMessage="Введите X, пожалуйста"
-                             onkeyup='this.value = this.value.replace(/[^\d-+.,e]/g,"")' maxlength='14'>
-                    <f:validator validatorId="xValueValidator"/>
-                </h:inputText><br/>
-                <h:message for="X" id="X-error" class='error'/>
+            <h:outputLabel for='X'>
+                Введите X ( изменяется в интервале (-3 ; 3) ):
+            </h:outputLabel>
+            <br/>
+            <h:inputText id='X' name='X' type='text'  value="#{tableRow.x}" required="true"
+                         requiredMessage="Введите X, пожалуйста"
+                         onkeyup='this.value = this.value.replace(/[^\d-+.,e]/g,"")' maxlength='14'>
+                <f:validator validatorId="xValueValidator"/>
+            </h:inputText><br/>
+            <h:message for="X" id="X-error" class='error'/>
 
-                <br/>
-                <h:outputLabel for='Y'>Выберите Y:</h:outputLabel>
-                <h:selectOneRadio id="Y" required="true" value="#{tableRow.y}"
-                                  requiredMessage="Выберите Y, пожалуйста" >
-                    <f:selectItem itemValue="-4" itemLabel="-4" />
-                    <f:selectItem itemValue="-3" itemLabel="-3" />
-                    <f:selectItem itemValue="-2" itemLabel="-2" />
-                    <f:selectItem itemValue="-1" itemLabel="-1" />
-                    <f:selectItem itemValue="0" itemLabel="0" />
-                    <f:selectItem itemValue="1" itemLabel="1" />
-                    <f:selectItem itemValue="2" itemLabel="2" />
-                    <f:selectItem itemValue="3" itemLabel="3" />
-                    <f:selectItem itemValue="4" itemLabel="4" />
-                </h:selectOneRadio>
-                <h:message for="Y" id="Y-error" class='error'/><br/>
+            <br/>
+            <h:outputLabel for='Y'>Выберите Y:</h:outputLabel>
+            <h:selectOneRadio id="Y" required="true" value="#{tableRow.y}"
+                              requiredMessage="Выберите Y, пожалуйста" >
+                <f:selectItem itemValue="-4" itemLabel="-4" />
+                <f:selectItem itemValue="-3" itemLabel="-3" />
+                <f:selectItem itemValue="-2" itemLabel="-2" />
+                <f:selectItem itemValue="-1" itemLabel="-1" />
+                <f:selectItem itemValue="0" itemLabel="0" />
+                <f:selectItem itemValue="1" itemLabel="1" />
+                <f:selectItem itemValue="2" itemLabel="2" />
+                <f:selectItem itemValue="3" itemLabel="3" />
+                <f:selectItem itemValue="4" itemLabel="4" />
+            </h:selectOneRadio>
+            <h:message for="Y" id="Y-error" class='error'/><br/>
 
-                <h:outputLabel>
-                    Для того, чтобы проверить попадание точки в область,
-                    нажмите на кнопку
-                </h:outputLabel>
-                <br/>
-                <h:commandButton id="check" value="Проверить" action="#{tableRow.handleRequest()}">
-                    <f:ajax execute="R X Y"
-                            render="R-error X-error Y-error info-table"/>
-                </h:commandButton>
-            </h:form>
-        </div>
-        <div id="area">
-            <h2>Заданная область:</h2>
-            <h:panelGroup layout="block" id="graph">
-                <ui:include src="graphicus.xhtml"/>
-            </h:panelGroup>
-        </div>
-        <div id="info">
-            <h:commandButton id="clear" value="Очистить таблицу" action="#{tableRowStorage.clear()}">
-                <f:ajax render="info-table"/>
+            <h:outputLabel>
+                Для того, чтобы проверить попадание точки в область,
+                нажмите на кнопку
+            </h:outputLabel>
+            <br/>
+            <h:commandButton id="check" value="Проверить" action="#{tableRow.handleRequest()}">
+                <f:ajax execute="R X Y"
+                        render="R-error X-error Y-error info-table graph"/>
             </h:commandButton>
-            <h:dataTable id="info-table" value="#{tableRowStorage.getAllTableRows()}" var="row">
-                <h:column>
-                    <f:facet name="header">R</f:facet>
-                    <h:outputText value="#{row.r}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">X</f:facet>
-                    <h:outputText value="#{row.x}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Y</f:facet>
-                    <h:outputText value="#{row.y}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Результат</f:facet>
-                    <h:outputText value="#{row.hitResult ? 'Попадение)' : 'Промах('}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Время запроса</f:facet>
-                    <h:outputText value="#{row.clientDate}">
-                        <f:convertDateTime type="offsetDateTime" pattern="yyyy-MM-dd HH:mm:ss"/>
-                    </h:outputText>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Время исполнения, мс</f:facet>
-                    <h:outputText value="#{row.executionTime}"/>
-                </h:column>
-            </h:dataTable>
-        </div>
-    </h:body>
+        </h:form>
+    </div>
+    <div id="area">
+        <h2>Заданная область:</h2>
+        <h:panelGroup layout="block" id="graph">
+            <ui:include src="graphicus.xhtml"/>
+        </h:panelGroup>
+    </div>
+    <div id="info">
+        <h:commandButton id="clear" value="Очистить таблицу" action="#{tableRowStorage.clear()}">
+            <f:ajax render="info-table"/>
+        </h:commandButton>
+        <h:dataTable id="info-table" value="#{tableRowStorage.getAllTableRows()}" var="row">
+            <h:column>
+                <f:facet name="header">R</f:facet>
+                <h:outputText value="#{row.r}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">X</f:facet>
+                <h:outputText value="#{row.x}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Y</f:facet>
+                <h:outputText value="#{row.y}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Результат</f:facet>
+                <h:outputText value="#{row.hitResult ? 'Попадение)' : 'Промах('}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Время запроса</f:facet>
+                <h:outputText value="#{row.clientDate}">
+                    <f:convertDateTime type="offsetDateTime" pattern="yyyy-MM-dd HH:mm:ss"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Время исполнения, мс</f:facet>
+                <h:outputText value="#{row.executionTime}"/>
+            </h:column>
+        </h:dataTable>
+    </div>
+</h:body>
 </html>
