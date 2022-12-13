@@ -2,13 +2,14 @@ package ru.itmo.lab_3.repository;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import ru.itmo.lab_3.entities.TableRow;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import java.util.Collections;
 import java.util.List;
 
 @ManagedBean(eager = true)
@@ -16,44 +17,49 @@ import java.util.List;
 @Getter
 @Setter
 public class HitCheckDao {
-    private static final String TABLE_NAME = "TableRow";
-    private static final String DELETE_ALL_BY_SESSION_ID =
-            "DELETE FROM " + TABLE_NAME + " tr WHERE tr.sessionId = :sessionId";
-    private static final String GET_ALL_BY_SESSION_ID =
-            "SELECT tr FROM " + TABLE_NAME + " tr WHERE tr.sessionId = :sessionId";
-    private final EntityManager entityManager;
-    private final EntityTransaction entityTransaction;
+    private SessionFactory factory;
 
     public HitCheckDao() {
-        entityManager =
-                Persistence.createEntityManagerFactory("tableRow").createEntityManager();
-        entityTransaction = entityManager.getTransaction();
+        try {
+            Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+            configuration.addAnnotatedClass(TableRow.class);
+            factory = configuration.buildSessionFactory();
+        } catch (Exception e) {
+            System.out.println("Исключение!" + e);
+        }
     }
 
     public void save(TableRow tableRow) {
-        if(!entityTransaction.isActive())
-            entityTransaction.begin();
-        entityManager.persist(tableRow);
-        entityTransaction.commit();
+        Session session = factory.openSession();
+
+        session.beginTransaction();
+        session.save(tableRow);
+        session.getTransaction().commit();
+        session.close();
     }
 
     public void clearBySessionId(String sessionId) {
-        if(!entityTransaction.isActive())
-            entityTransaction.begin();
-        entityManager.createQuery(DELETE_ALL_BY_SESSION_ID)
-                .setParameter("sessionId", sessionId)
-                .executeUpdate();
-        entityTransaction.commit();
+        Session session = factory.openSession();
+        session.beginTransaction();
+        session.createQuery("delete from TableRow where sessionId= :sessionId")
+                .setParameter("sessionId", sessionId).executeUpdate();
+        session.getTransaction().commit();
+        session.close();
     }
 
     public List<TableRow> getAllBySessionId(String sessionId) {
-        if(!entityTransaction.isActive())
-            entityTransaction.begin();
-        List<TableRow> resultList = entityManager
-                .createQuery(GET_ALL_BY_SESSION_ID)
-                .setParameter("sessionId", sessionId)
-                .getResultList();
-        entityTransaction.commit();
-        return resultList;
+        if( factory != null ) {
+            Session session = factory.openSession();
+            session.beginTransaction();
+            List<TableRow> resultList = session
+                    .createQuery("SELECT t FROM TableRow t WHERE t.sessionId = :sessionId")
+                    .setParameter("sessionId", sessionId)
+                    .getResultList();
+            session.getTransaction().commit();
+            session.close();
+            return resultList;
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

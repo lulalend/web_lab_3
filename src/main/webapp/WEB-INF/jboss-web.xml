@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jboss-web>
 
-    <context-root>/lab_3</context-root>
+    <context-root>/lab-3</context-root>
 
 </jboss-web>

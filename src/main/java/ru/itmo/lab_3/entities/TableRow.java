@@ -19,9 +19,10 @@ import java.time.ZoneOffset;
 
 @ManagedBean
 @RequestScoped
-@Entity(name = "TableRow")
 @Getter
 @Setter
+@Table(name = "hits")
+@Entity
 public class TableRow implements Serializable {
     @Transient
     private static final ZoneOffset UTC_TIMEZONE = ZoneOffset.of("+0");
@@ -38,7 +39,7 @@ public class TableRow implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private BigDecimal r;
+    private BigDecimal r = new BigDecimal("1");
     private BigDecimal x;
     private BigDecimal y;
     private boolean hitResult;
